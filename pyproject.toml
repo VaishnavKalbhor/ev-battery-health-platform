@@ -1,0 +1,14 @@
+[project]
+name = "ev-battery-health-platform"
+version = "0.1.0"
+description = "Medallion architecture data platform for EV battery health and charging intelligence."
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
