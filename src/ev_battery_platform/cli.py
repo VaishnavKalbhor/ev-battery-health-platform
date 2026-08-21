@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -10,6 +11,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--version",
         action="store_true",
         help="Print the package version.",
+    )
+    subparsers = parser.add_subparsers(dest="command")
+
+    generate = subparsers.add_parser("generate", help="Generate synthetic bronze telemetry.")
+    generate.add_argument(
+        "--config",
+        default="config/fleet_sample.json",
+        help="Path to the generator configuration JSON.",
     )
     return parser
 
@@ -24,5 +33,12 @@ def main() -> None:
         print(__version__)
         return
 
-    parser.print_help()
+    if args.command == "generate":
+        from .simulator.generate import generate_telemetry, load_config
 
+        config = load_config(Path(args.config))
+        count = generate_telemetry(config)
+        print(f"Wrote {count} raw telemetry events to {config.output_path}")
+        return
+
+    parser.print_help()

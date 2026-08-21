@@ -1,0 +1,9 @@
+{
+  "seed": 42,
+  "fleet_size": 50,
+  "days": 14,
+  "events_per_vehicle_per_day": 72,
+  "start_date": "2026-01-01T00:00:00+00:00",
+  "output_path": "data/bronze/ev_telemetry_raw.jsonl"
+}
+
