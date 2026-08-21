@@ -2,6 +2,8 @@
 
 The gold datasets are designed for a fleet operations dashboard with four pages.
 
+The current implementation generates a self-contained HTML dashboard at `reports/dashboard.html`. It focuses on the core portfolio story: fleet health, charging intelligence, thermal exposure, and warranty risk.
+
 ## Fleet Health
 
 - Vehicles by warranty risk band
@@ -29,4 +31,3 @@ The gold datasets are designed for a fleet operations dashboard with four pages.
 - SOH drop vs odometer
 - DC fast-charging share vs thermal exposure
 - Priority list for service or engineering review
-

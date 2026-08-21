@@ -54,6 +54,23 @@ def build_parser() -> argparse.ArgumentParser:
         default="reports/data_quality.md",
         help="Markdown report output path.",
     )
+
+    dashboard = subparsers.add_parser("dashboard", help="Build HTML dashboard and executive summary.")
+    dashboard.add_argument(
+        "--gold-dir",
+        default="data/gold",
+        help="Directory containing gold datasets.",
+    )
+    dashboard.add_argument(
+        "--silver-dir",
+        default="data/silver",
+        help="Directory containing silver datasets.",
+    )
+    dashboard.add_argument(
+        "--output-dir",
+        default="reports",
+        help="Directory for generated dashboard and summary files.",
+    )
     return parser
 
 
@@ -104,6 +121,22 @@ def main() -> None:
         for check in report.checks:
             status = "PASS" if check.passed else "FAIL"
             print(f"{status} {check.name}: {check.details}")
+        return
+
+    if args.command == "dashboard":
+        from .reporting import build_reports
+
+        result = build_reports(
+            gold_dir=Path(args.gold_dir),
+            silver_dir=Path(args.silver_dir),
+            output_dir=Path(args.output_dir),
+        )
+        print(f"Dashboard: {result.dashboard_path}")
+        print(f"Executive summary: {result.summary_path}")
+        print(
+            f"Coverage: {result.vehicles} vehicles, {result.regions} regions, "
+            f"{result.high_risk_vehicles} high-risk vehicles"
+        )
         return
 
     parser.print_help()

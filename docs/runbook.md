@@ -24,6 +24,12 @@ python -m ev_battery_platform run
 python -m ev_battery_platform quality
 ```
 
+## Build Reports and Dashboard
+
+```powershell
+python -m ev_battery_platform dashboard
+```
+
 ## Run Tests
 
 ```powershell
@@ -40,4 +46,5 @@ python -m unittest discover -s tests
 | `data/silver/rejected_events.csv` | Invalid or duplicate bronze records |
 | `data/gold/*.csv` | Dashboard-ready analytics products |
 | `reports/data_quality.md` | Latest quality report |
-
+| `reports/dashboard.html` | Self-contained fleet dashboard |
+| `reports/executive_summary.md` | Executive Markdown summary |

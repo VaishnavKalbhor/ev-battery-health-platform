@@ -57,6 +57,7 @@ python -m pip install -e .
 python -m ev_battery_platform generate --config config/fleet_sample.json
 python -m ev_battery_platform run
 python -m ev_battery_platform quality
+python -m ev_battery_platform dashboard
 python -m unittest discover -s tests
 ```
 
@@ -68,6 +69,8 @@ After running the sample configuration, the platform creates:
 - Silver battery event and charging session datasets
 - Gold data products for fleet health, regional charging behavior, thermal risk, and warranty scoring
 - A Markdown quality report at `reports/data_quality.md`
+- A self-contained HTML dashboard at `reports/dashboard.html`
+- An executive Markdown report at `reports/executive_summary.md`
 
 ## Portfolio Talking Points
 
@@ -77,6 +80,7 @@ After running the sample configuration, the platform creates:
 - Implemented silver normalization with domain ranges, event deduplication, and rejected-record capture.
 - Produced gold data products for battery health, charging intelligence, thermal exposure, and warranty risk.
 - Added automated data quality checks and CI-backed regression tests.
+- Generated dashboard and executive report outputs from trusted gold datasets.
 
 ## Production Mapping
 

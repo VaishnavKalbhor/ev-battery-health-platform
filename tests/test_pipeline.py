@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ev_battery_platform.pipeline import run_pipeline
 from ev_battery_platform.quality import run_quality_checks
+from ev_battery_platform.reporting import build_reports
 from ev_battery_platform.simulator import GenerationConfig, generate_telemetry
 
 
@@ -33,6 +34,7 @@ class PipelineIntegrationTest(unittest.TestCase):
             generated = generate_telemetry(config)
             result = run_pipeline(bronze_path=bronze_path, silver_dir=silver_dir, gold_dir=gold_dir)
             quality = run_quality_checks(silver_dir=silver_dir, gold_dir=gold_dir, report_path=report_path)
+            reports = build_reports(gold_dir=gold_dir, silver_dir=silver_dir, output_dir=root / "reports")
 
             self.assertEqual(generated, 192)
             self.assertEqual(result.raw_events, 192)
@@ -42,8 +44,11 @@ class PipelineIntegrationTest(unittest.TestCase):
             self.assertTrue((gold_dir / "battery_health_summary.csv").exists())
             self.assertTrue(quality.passed)
             self.assertIn("Overall status: PASS", report_path.read_text(encoding="utf-8"))
+            self.assertEqual(reports.vehicles, 4)
+            self.assertTrue(reports.dashboard_path.exists())
+            self.assertTrue(reports.summary_path.exists())
+            self.assertIn("EV Battery Health Dashboard", reports.dashboard_path.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
     unittest.main()
-
