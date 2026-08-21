@@ -20,6 +20,23 @@ def build_parser() -> argparse.ArgumentParser:
         default="config/fleet_sample.json",
         help="Path to the generator configuration JSON.",
     )
+
+    run = subparsers.add_parser("run", help="Run bronze, silver, and gold medallion jobs.")
+    run.add_argument(
+        "--bronze-path",
+        default="data/bronze/ev_telemetry_raw.jsonl",
+        help="Path to raw bronze JSONL telemetry.",
+    )
+    run.add_argument(
+        "--silver-dir",
+        default="data/silver",
+        help="Directory for silver output datasets.",
+    )
+    run.add_argument(
+        "--gold-dir",
+        default="data/gold",
+        help="Directory for gold output datasets.",
+    )
     return parser
 
 
@@ -39,6 +56,23 @@ def main() -> None:
         config = load_config(Path(args.config))
         count = generate_telemetry(config)
         print(f"Wrote {count} raw telemetry events to {config.output_path}")
+        return
+
+    if args.command == "run":
+        from .pipeline import run_pipeline
+
+        result = run_pipeline(
+            bronze_path=Path(args.bronze_path),
+            silver_dir=Path(args.silver_dir),
+            gold_dir=Path(args.gold_dir),
+        )
+        print(
+            "Processed "
+            f"{result.raw_events} raw events into {result.silver_events} silver events, "
+            f"{result.rejected_events} rejects, and {result.charging_sessions} charging sessions."
+        )
+        for output in result.gold_outputs:
+            print(f"Gold output: {output}")
         return
 
     parser.print_help()
