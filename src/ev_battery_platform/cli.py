@@ -37,6 +37,23 @@ def build_parser() -> argparse.ArgumentParser:
         default="data/gold",
         help="Directory for gold output datasets.",
     )
+
+    quality = subparsers.add_parser("quality", help="Run data quality checks.")
+    quality.add_argument(
+        "--silver-dir",
+        default="data/silver",
+        help="Directory containing silver datasets.",
+    )
+    quality.add_argument(
+        "--gold-dir",
+        default="data/gold",
+        help="Directory containing gold datasets.",
+    )
+    quality.add_argument(
+        "--report-path",
+        default="reports/data_quality.md",
+        help="Markdown report output path.",
+    )
     return parser
 
 
@@ -73,6 +90,20 @@ def main() -> None:
         )
         for output in result.gold_outputs:
             print(f"Gold output: {output}")
+        return
+
+    if args.command == "quality":
+        from .quality import run_quality_checks
+
+        report = run_quality_checks(
+            silver_dir=Path(args.silver_dir),
+            gold_dir=Path(args.gold_dir),
+            report_path=Path(args.report_path),
+        )
+        print(f"Data quality status: {'PASS' if report.passed else 'FAIL'}")
+        for check in report.checks:
+            status = "PASS" if check.passed else "FAIL"
+            print(f"{status} {check.name}: {check.details}")
         return
 
     parser.print_help()
